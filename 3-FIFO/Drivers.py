@@ -1,6 +1,6 @@
 
 import cocotb
-from cocotb.triggers import RisingEdge, ReadOnly
+from cocotb.triggers import RisingEdge, ReadOnly, Timer, ReadWrite
 from cocotb.clock import Clock
 from cocotb_bus.drivers import BusDriver
 from dataclasses import dataclass
@@ -31,16 +31,15 @@ class InputDriver(BusDriver):
     
     async def _driver_send(self, pkg: packet_data, sync=True):
         #set the values in the interface
-        await RisingEdge(self.clk)
         self.bus.i_write.value = int(pkg.write)
         self.bus.i_read.value  = int(pkg.read)
         self.bus.i_data.value  = int(pkg.data)
-        self.bus.rst_n = 1  # Ensure reset is not active
+        #self.bus.rst_n = 1  # Ensure reset is not active
+
         await RisingEdge(self.clk)
 
     async def reset(self):
-        # Reset the DUT
-        # set input signals to 0
+        # Reset the DUT and set input signals to 0
         for sgn in self._signals:
             getattr(self.bus, sgn).value = 0
 
@@ -57,8 +56,7 @@ class OutputMonitor:
         self.clk = clk
 
     async def read_data(self):
-        if self.dut.o_empty.value == 1:
-            return null_value32bit # fifo empty
+        #await ReadWrite()  # wait for the read mode to be stable
         # else, read the data
         #self.dut.i_read.value = 1
         raw = self.dut.o_data.value
@@ -68,21 +66,17 @@ class OutputMonitor:
         return int(raw)
     
     async def read_signals(self):
-        
-        await ReadOnly()  # wait for the read mode to be stable
+        await ReadWrite()  # ensure all signals are stable before reading
         signals = {
             "empty": bool(self.dut.o_empty.value),
             "full": bool(self.dut.o_full.value),
             "len": int(self.dut.dbg_counter.value)
         }
 
-        for key, val in signals.items():
-            if hasattr(val, "binstr") and ('x' in val.binstr or 'z' in val.binstr):
-                signals[key] = 'x'
         return signals
     
     
     async def read(self):
-        signals = await self.read_signals()
         data = await self.read_data()
+        signals = await self.read_signals()
         return data, signals

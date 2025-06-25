@@ -3,8 +3,8 @@ SIM ?= icarus
 WAVES=1
 TOPLEVEL_LANG ?= verilog
 
-export COCOTB_ENABLE_TRACE=1
-export COCOTB_LOG_LEVEL=DEBUG
+#export COCOTB_ENABLE_TRACE=0 
+export COCOTB_LOG_LEVEL=INFO #(use DEBUG for more info)
 VERILOG_SOURCES += $(wildcard $(PWD)/*.v)
 # use VHDL_SOURCES for VHDL files
 

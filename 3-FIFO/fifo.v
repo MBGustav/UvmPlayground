@@ -16,7 +16,7 @@ module fifo #(
     reg [len_data-1:0] fifo_mem [0:len_fifo-1];
     reg [$clog2(len_fifo):0] wr_ptr=0, rd_ptr=0, count=0;
 
-    assign o_data  = (count > 0) ? fifo_mem[rd_ptr] : {len_data{1'b0}};
+    assign o_data  = (count > 0) ? fifo_mem[rd_ptr] : {len_data{1'bx}};
     assign o_empty = (count == 0);
     assign o_full  = (count >= len_fifo);
     assign dbg_counter = count;
@@ -30,12 +30,18 @@ module fifo #(
             // i_write operation
             if (i_write && !o_full) begin
                 fifo_mem[wr_ptr] <= i_data;
-                wr_ptr <= (wr_ptr + 1) % len_fifo;
+                if (wr_ptr == len_fifo - 1)
+                    wr_ptr <= 0;
+                else
+                    wr_ptr <= wr_ptr + 1;
                 count  <= count + 1;
             end
             // i_read operation
             if (i_read && !o_empty) begin
-                rd_ptr <= (rd_ptr + 1) % len_fifo;
+                if (rd_ptr == len_fifo - 1)
+                    rd_ptr <= 0;
+                else
+                    rd_ptr <= rd_ptr + 1;
                 count  <= count - 1;
             end
         end

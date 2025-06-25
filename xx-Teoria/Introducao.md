@@ -62,7 +62,7 @@ No contexto de **Coverage Test**, desenvolvemos um ambiente de verificação que
 
 # Primeiros Testes com CocoTB
 Visando o uso de uma ferramenta open-source, utilizarei a ferramenta 
-[CoCoTB](#referencias) para facilitar a utilização por qualquer outro.
+[CoCoTB](#referencias) para o desenvolvimento dos módulos e ensaios neste repositório.
 Para a montagem dos modelos apresentados, usaremos verilog-2001.
 
 ### 1. Como funciona a Ferramenta:
@@ -78,4 +78,4 @@ Podemos separar Drivers como entrada/saída, que permite dar clareza na separaç
 
 # Referencias
 
-[[1]. CocoTB Framework](https://www.cocotb.org/)
+[1].[CocoTB Framework](https://www.cocotb.org/)
