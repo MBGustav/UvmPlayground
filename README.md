@@ -11,3 +11,4 @@ Cada pasta apresenta um módulo diferente, onde é apresentado uma especialidade
 
 - [3-FIFO](./3-FIFO): Exemplo de verificação de um módulo FIFO, apresentando uma forma diferente de abordar o problema.
 
+- [xx-Teoria](./xx-Teoria): Conteúdo teórico complementar sobre UVM e conceitos para  compreender a framework `cocotb` por meio dos exemplos práticos mencionados.
